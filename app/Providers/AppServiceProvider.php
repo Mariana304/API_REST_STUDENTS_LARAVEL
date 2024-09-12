@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Repositories\StudentRepository;
+use App\Services\StudentService;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,7 +14,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+         // Registrar el repositorio
+         $this->app->singleton(StudentRepository::class, function ($app) {
+            return new StudentRepository();
+        });
+
+        // Registrar el servicio
+        $this->app->singleton(StudentService::class, function ($app) {
+            return new StudentService($app->make(StudentRepository::class));
+        });
     }
 
     /**
